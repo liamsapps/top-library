@@ -14,8 +14,7 @@ const bookInfo = document.querySelectorAll(".book_info");
 
 function GenerateGuid() {
     if (self && self.crypto && typeof self.crypto.randomUUID === 'function') {
-        const uuid = self.crypto.randomUUID(); 
-        // console.log(uuid);
+        const uuid = self.crypto.randomUUID();         
         return uuid;
     } else {
         console.log("self.crypto not available");
@@ -36,23 +35,22 @@ function Book(title, author, pages, read) {
 
 function addBookToLibrary(title, author, pages, read) {
     console.log('in addBookToLibrary');
-    myLibrary.push(new Book(title, author, pages, read));    
-    // myLibrary.push(new Book(title, author, pages, (read === "yes" ? true : false)));    
+    myLibrary.push(new Book(title, author, pages, read));        
 }
 
 // test data
 addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
 addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
-// addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
-// addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-// addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-// addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
-// addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-// addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-// addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-// addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-// addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-// addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
+addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
+addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
+addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
+addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
+addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
+addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
+addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
+addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
+addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
+addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
 
 document.addEventListener("DOMContentLoaded", (event) => {
     myForm.style.cssText = "display: none; visibility: hidden";
@@ -64,18 +62,11 @@ myForm.addEventListener("submit", (event) => {
 
     console.log("in myForm submit listener");
     // If the form is invalid, do not proceed        
-    if (!myForm.checkValidity()) {
-        // NOT DISPLAYED !!!
-        // alert("Please fill out all required fields correctly.");
-        // console.log("Please fill out all required fields correctly.");
-        event.preventDefault(); // Prevent submission
-        // return;            
+    if (!myForm.checkValidity()) {        
+        event.preventDefault(); // Prevent submission        
     }
     else {
-        // DISPLAYED
-        // alert("Form is valid and will be submitted.");
         console.log("Form is valid and will be submitted.");
-        console.log(bRead.value);
         addBookToLibrary(bTitle.value, bAuthor.value, bPages.value, bRead.value);
         
         event.preventDefault();
@@ -88,7 +79,6 @@ myForm.addEventListener("submit", (event) => {
 
 
 btnAdd.addEventListener("click", formDisplay);
-// btnCancel.addEventListener("click", formDisplay);
 btnCancel.addEventListener("click", () => {
     formDisplay();
     formReset();
@@ -145,13 +135,7 @@ function loadBooks() {
         bookPages.textContent = item.pages;
 
         const bookRead = document.createElement("li");        
-        bookRead.textContent = item.read;
-        
-        // console.log(item.id);
-        // console.log(item.title);
-        // console.log(item.author);
-        // console.log(item.pages);
-        // console.log(item.read);
+        bookRead.textContent = item.read;       
 
         // const items = [bookID, bookTitle, bookAuthor, bookPages, bookRead];
         const items = [bookTitle, bookAuthor, bookPages, bookRead];
@@ -160,9 +144,32 @@ function loadBooks() {
 
         bookCard.appendChild(list);
         // container.appendChild(bookCard);
+
+        const buttonHolder = document.createElement("div");
+        buttonHolder.style.className = "book_buttons";
+        
+        const bookBtnDelete = document.createElement("button");
+        bookBtnDelete.textContent = "Delete";        
+        bookBtnDelete.addEventListener("click", (event) => removeBookFromLibrary(event, item.id));
+        
+        // const bookBtnRead = document.createElement("button");
+        // bookBtnRead.textContent = "Read?";
+        
+        buttonHolder.appendChild(bookBtnDelete);
+        // buttonHolder.appendChild(bookBtnRead);
+        bookCard.appendChild(buttonHolder);
+
         books.appendChild(bookCard);
 
         console.log('end of myLibrary.forEach');
     });
 }
+
+function removeBookFromLibrary(event, bookID) {    
+    const bookIndex = myLibrary.findIndex(book => book.id === bookID);
+    myLibrary.splice(bookIndex, 1);
+    
+    loadBooks();
+}
+
 
