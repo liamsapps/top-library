@@ -1,3 +1,4 @@
+/* General Settings */
 * {
     margin: 0px;
     padding: 0px;
@@ -10,28 +11,160 @@ body {
     width: 100vw;
     height: 100vh;    
 }
+
+/* Layout */
 #container {    
     margin: 0 1.5rem;
     width: 95%;
     height: 95%;
-    display: flex;    
-    justify-content: center;    
-    flex-wrap: wrap;
+    display: flex;   
+    flex-direction: column; 
+    /* justify-content: center;    
+    flex-wrap: wrap; */
     gap: 1rem;    
 }
 
-h1 {    
+/* h1 {    
     margin: 0px;
     padding: 3rem 0px 0px 0px;
     width: 100%;    
     font-size: 3rem;
     text-align: center;    
+} */
+
+#header {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
 }
+
+.middle {
+    flex: 10;
+    display: flex;
+}
+
+#inputs .inner-inputs1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#inputs {
+    margin-left: 1rem;
+}
+
+#form_buttons {
+    display: flex;
+    justify-content: center;
+    /* justify-content: space-around; */
+    gap: 1rem;
+}
+#books {
+    flex: 2;
+    display: flex;    
+    /* justify-content: center;     */
+    /* justify-content: space-around; */
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: 2rem
+
+    
+}
+
 .card {    
-    width: 23%;
+    width: clamp(10rem, 20%, 20rem);
     border: 1px solid black;
 }
 
 ul {
     list-style: none;
 }
+
+/* hide form */
+/* form {
+    display: none;
+    visibility: hidden;
+} */
+
+/* Inputs */
+label, input, button {
+    appearance: none;
+}
+
+label {
+    display: block;
+    /* font-size: 0.6rem; */
+    /* line-height: 0.9rem; */
+    line-height: 1.2rem;
+    /* letter-spacing: 0.1rem; */
+}
+
+input {
+    font-family: inherit;    
+    font-size: 0.9rem;
+    width: 12rem;
+    height: 1.8rem;
+
+    border: 1px solid #E5E7EB; 
+    border-radius: 0.3rem;
+    
+    padding-left: 0.3rem;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid rgb(87, 87, 226);
+    box-shadow: 0px 1px 3px 1px rgb(87, 87, 226);
+}
+
+input[id*="password"]:invalid {
+    border: 1px solid red;
+    /* box-shadow: 1px 1px 1px 1px red; */
+}
+
+input[id*="password"]:valid {
+    border: 1px solid green;
+    /* box-shadow: 1px 1px 1px 1px green; */
+}
+
+input[placeholder] {
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+
+button {
+    background-color: #596D48;
+    color: white;
+    border-radius: 0.3rem;
+    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 2rem; */
+    /* padding: 8px 30px; */
+    font-weight: 900;
+}
+
+#form_buttons > button {
+    width: 6.5rem;
+    padding: 0.5rem 0.5rem;
+}
+
+.right > .child.bottom > div > p > a {
+    color: #596D48;
+    text-decoration: none;
+}
+
+/* BOTH WORK !!! */
+*:disabled {
+    background-color: dimgrey;
+    color: linen;
+    opacity: 1;
+}
+
+/* .book_info:disabled {
+    background-color: dimgrey;
+    color: linen;
+    opacity: 1;
+} */
