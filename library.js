@@ -33,64 +33,24 @@ function Book(title, author, pages, read) {
     }
 }
 
+Book.prototype.toggleRead = function() {
+    this.read = this.read === 'yes' ? 'no' : 'yes';
+}
+
 function addBookToLibrary(title, author, pages, read) {
     console.log('in addBookToLibrary');
     myLibrary.push(new Book(title, author, pages, read));        
 }
 
-// test data
-addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
-addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
-addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
-addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
-addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-addBookToLibrary("Utopia", "Sir Thomas More", 359, true);
-addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "no");
-
-document.addEventListener("DOMContentLoaded", (event) => {
-    myForm.style.cssText = "display: none; visibility: hidden";
-    // bookInfo.forEach(item => item.disabled = true);
+function removeBookFromLibrary(event, bookID) {    
+    const bookIndex = myLibrary.findIndex(book => book.id === bookID);
+    myLibrary.splice(bookIndex, 1);
+    
     loadBooks();
-});
+}
 
-myForm.addEventListener("submit", (event) => {
-
-    console.log("in myForm submit listener");
-    // If the form is invalid, do not proceed        
-    if (!myForm.checkValidity()) {        
-        event.preventDefault(); // Prevent submission        
-    }
-    else {
-        console.log("Form is valid and will be submitted.");
-        addBookToLibrary(bTitle.value, bAuthor.value, bPages.value, bRead.value);
-        
-        event.preventDefault();
-
-        formReset();
-        formDisplay();
-        loadBooks();
-    }        
-});
-
-
-btnAdd.addEventListener("click", formDisplay);
-btnCancel.addEventListener("click", () => {
-    formDisplay();
-    formReset();
-});
-
-
-
-function formDisplay() {
-    // console.log("in formDisplay");
-    // console.log(`btnAdd.disabled: ${btnAdd.disabled}`);
-    if (btnAdd.disabled === false) {
-        console.log(`btnAdd.disabled: ${btnAdd.disabled}`);
+function formDisplay() {    
+    if (btnAdd.disabled === false) {        
         btnAdd.disabled = true;        
         myForm.style.cssText = "display: block; visibility: visible";
         bookInfo.forEach(item => item.disabled = false);
@@ -99,7 +59,6 @@ function formDisplay() {
         btnAdd.disabled = false;
         myForm.style.cssText = "display: none; visibility: hidden";
         bookInfo.forEach(item => item.disabled = true);
-
     }    
 }
 
@@ -116,8 +75,6 @@ function loadBooks() {
     }
 
     myLibrary.forEach((item) => {            
-        console.log('start of myLibrary.forEach');
-
         const bookCard = document.createElement("div");
         bookCard.className = "card";
         const list = document.createElement("ul");
@@ -136,14 +93,11 @@ function loadBooks() {
 
         const bookRead = document.createElement("li");        
         bookRead.textContent = item.read;       
-
-        // const items = [bookID, bookTitle, bookAuthor, bookPages, bookRead];
-        const items = [bookTitle, bookAuthor, bookPages, bookRead];
-        console.log(items[0]);
+        
+        const items = [bookTitle, bookAuthor, bookPages, bookRead];        
         items.forEach(item => list.appendChild(item));
 
-        bookCard.appendChild(list);
-        // container.appendChild(bookCard);
+        bookCard.appendChild(list);        
 
         const buttonHolder = document.createElement("div");
         buttonHolder.style.className = "book_buttons";
@@ -152,24 +106,66 @@ function loadBooks() {
         bookBtnDelete.textContent = "Delete";        
         bookBtnDelete.addEventListener("click", (event) => removeBookFromLibrary(event, item.id));
         
-        // const bookBtnRead = document.createElement("button");
-        // bookBtnRead.textContent = "Read?";
+        const bookBtnRead = document.createElement("button");
+        bookBtnRead.textContent = "Read?";
+        bookBtnRead.addEventListener("click", () => {
+            item.toggleRead()
+            loadBooks();
+        });        
         
         buttonHolder.appendChild(bookBtnDelete);
-        // buttonHolder.appendChild(bookBtnRead);
+        buttonHolder.appendChild(bookBtnRead);
         bookCard.appendChild(buttonHolder);
 
-        books.appendChild(bookCard);
-
-        console.log('end of myLibrary.forEach');
+        books.appendChild(bookCard);        
     });
 }
 
-function removeBookFromLibrary(event, bookID) {    
-    const bookIndex = myLibrary.findIndex(book => book.id === bookID);
-    myLibrary.splice(bookIndex, 1);
-    
+// test data
+addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
+addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
+addBookToLibrary("To Kill a Mockingbird", "Harper Lee", 281, "yes");
+addBookToLibrary("1984", "George Orwell", 328, "yes");
+addBookToLibrary("Animal Farm", "George Orwell", 122, "yes");
+addBookToLibrary("Brave New World", "Aldous Huxley", 268, "yes");
+addBookToLibrary("A Canticle for Leibowitz", "Walter M. Miller Jr.", 320, "yes");
+addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", 180, "yes");
+addBookToLibrary("Moby Dick", "Herman Melville", 635, "no");
+addBookToLibrary("War and Peace", "Leo Tolstoy", 1225, "no");
+addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", 277, "no");
+addBookToLibrary("Lord of the Flies", "William Golding", 224, "no");
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    myForm.style.cssText = "display: none; visibility: hidden";
+    // bookInfo.forEach(item => item.disabled = true);
     loadBooks();
-}
+});
+
+myForm.addEventListener("submit", (event) => {
+    // If the form is invalid, do not proceed        
+    if (!myForm.checkValidity()) {        
+        event.preventDefault(); // Prevent submission        
+    }
+    else {
+        console.log("Form is valid and will be submitted.");
+        addBookToLibrary(bTitle.value, bAuthor.value, bPages.value, bRead.value);
+        
+        event.preventDefault();
+
+        formReset();
+        formDisplay();
+        loadBooks();
+    }        
+});
+
+btnAdd.addEventListener("click", formDisplay);
+
+btnCancel.addEventListener("click", () => {
+    formDisplay();
+    formReset();
+});
+
+
+
 
 
