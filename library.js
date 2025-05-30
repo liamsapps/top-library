@@ -1,5 +1,4 @@
 const myLibrary = [];
-// const container = document.querySelector("#container");
 const books = document.querySelector("#books");
 const btnAdd = document.querySelector("#add");
 const myForm = document.querySelector("#my_form");
@@ -38,8 +37,7 @@ Book.prototype.toggleRead = function() {
 }
 
 function addBookToLibrary(title, author, pages, read) {
-    console.log('in addBookToLibrary');
-    myLibrary.push(new Book(title, author, pages, read));        
+    myLibrary.unshift(new Book(title, author, pages, read));        
 }
 
 function removeBookFromLibrary(event, bookID) {    
@@ -77,11 +75,14 @@ function loadBooks() {
     myLibrary.forEach((item) => {            
         const bookCard = document.createElement("div");
         bookCard.className = "card";
+
+        const listHolder = document.createElement("div");
+        listHolder.className = "book_list";
         const list = document.createElement("ul");
 
         // const bookID = document.createElement("li");
         // bookID.textContent = item.id;
-
+        
         const bookTitle = document.createElement("li");
         bookTitle.textContent = item.title;
 
@@ -92,29 +93,32 @@ function loadBooks() {
         bookPages.textContent = item.pages;
 
         const bookRead = document.createElement("li");        
-        bookRead.textContent = item.read;       
+        bookRead.textContent = (item.read === "yes") ? "read" : "not read"; 
+        // bookRead.className = (item.read === "yes") ? "book_read" : "";      
+        bookRead.className = (item.read === "yes") ? "book_read" : "book_not_read";      
         
         const items = [bookTitle, bookAuthor, bookPages, bookRead];        
         items.forEach(item => list.appendChild(item));
 
-        bookCard.appendChild(list);        
+        listHolder.appendChild(list);
+        bookCard.appendChild(listHolder);        
 
         const buttonHolder = document.createElement("div");
-        buttonHolder.style.className = "book_buttons";
-        
-        const bookBtnDelete = document.createElement("button");
-        bookBtnDelete.textContent = "Delete";        
-        bookBtnDelete.addEventListener("click", (event) => removeBookFromLibrary(event, item.id));
-        
+        buttonHolder.className = "book_buttons";
+                
         const bookBtnRead = document.createElement("button");
-        bookBtnRead.textContent = "Read?";
+        bookBtnRead.textContent = "Read ?";
         bookBtnRead.addEventListener("click", () => {
             item.toggleRead()
             loadBooks();
         });        
+
+        const bookBtnDelete = document.createElement("button");
+        bookBtnDelete.textContent = "Delete";        
+        bookBtnDelete.addEventListener("click", (event) => removeBookFromLibrary(event, item.id));      
         
-        buttonHolder.appendChild(bookBtnDelete);
         buttonHolder.appendChild(bookBtnRead);
+        buttonHolder.appendChild(bookBtnDelete);
         bookCard.appendChild(buttonHolder);
 
         books.appendChild(bookCard);        
@@ -124,16 +128,27 @@ function loadBooks() {
 // test data
 addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
 addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
-addBookToLibrary("To Kill a Mockingbird", "Harper Lee", 281, "yes");
-addBookToLibrary("1984", "George Orwell", 328, "yes");
-addBookToLibrary("Animal Farm", "George Orwell", 122, "yes");
-addBookToLibrary("Brave New World", "Aldous Huxley", 268, "yes");
-addBookToLibrary("A Canticle for Leibowitz", "Walter M. Miller Jr.", 320, "yes");
-addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", 180, "yes");
-addBookToLibrary("Moby Dick", "Herman Melville", 635, "no");
-addBookToLibrary("War and Peace", "Leo Tolstoy", 1225, "no");
 addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", 277, "no");
-addBookToLibrary("Lord of the Flies", "William Golding", 224, "no");
+addBookToLibrary("1984", "George Orwell", 328, "yes");
+addBookToLibrary("A Canticle for Leibowitz", "Walter M. Miller Jr.", 320, "yes");
+addBookToLibrary("Animal Farm", "George Orwell", 122, "yes");
+addBookToLibrary("War and Peace", "Leo Tolstoy", 1225, "no");
+addBookToLibrary("Brave New World", "Aldous Huxley", 268, "yes");
+addBookToLibrary("Moby Dick", "Herman Melville", 635, "no");
+
+// addBookToLibrary("Utopia", "Sir Thomas More", 359, "yes");
+// addBookToLibrary("Pillars of the Earth", "Ken Follett", 806, "yes");
+// addBookToLibrary("To Kill a Mockingbird", "Harper Lee", 281, "yes");
+// addBookToLibrary("1984", "George Orwell", 328, "yes");
+// addBookToLibrary("Animal Farm", "George Orwell", 122, "yes");
+// addBookToLibrary("Brave New World", "Aldous Huxley", 268, "yes");
+// addBookToLibrary("A Canticle for Leibowitz", "Walter M. Miller Jr.", 320, "yes");
+// addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", 180, "yes");
+// addBookToLibrary("Moby Dick", "Herman Melville", 635, "no");
+// addBookToLibrary("War and Peace", "Leo Tolstoy", 1225, "no");
+// addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", 277, "no");
+// addBookToLibrary("Lord of the Flies", "William Golding", 224, "no");
+
 
 document.addEventListener("DOMContentLoaded", (event) => {
     myForm.style.cssText = "display: none; visibility: hidden";
@@ -147,19 +162,26 @@ myForm.addEventListener("submit", (event) => {
         event.preventDefault(); // Prevent submission        
     }
     else {
-        console.log("Form is valid and will be submitted.");
+        // Form is valid
         addBookToLibrary(bTitle.value, bAuthor.value, bPages.value, bRead.value);
         
+        // Prevent submission
         event.preventDefault();
 
+        // if new book added OR cancelled
         formReset();
+        
+        // keep form hidden until button ("Add to Collection") clicked 
         formDisplay();
+
         loadBooks();
     }        
 });
 
+// from the left, form will slide into place
 btnAdd.addEventListener("click", formDisplay);
 
+// hide form and clear inputs
 btnCancel.addEventListener("click", () => {
     formDisplay();
     formReset();

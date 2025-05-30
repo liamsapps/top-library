@@ -17,8 +17,7 @@
         <div id="inputs">                    
             <form id="my_form" name="my_form" action="./2library_with_form.js">                        
                 <div class="inner-inputs1">
-                    <div>
-                        <!-- <label class="book_info" for="book_title" data-help="Enter the book's title">Book Title</label> -->
+                    <div>                        
                         <label for="book_title" data-help="Enter the book's title">Book Title</label> 
                         <input type="text" class="book_info" 
                                 id="book_title" 
@@ -27,12 +26,11 @@
                                 maxlength="50"
                                 placeholder="Enter the book's title"
                                 pattern="^[A-Za-z0-9 ]{2,50}$"
-                                title="Between 2 & 50 characters, only letters accepted"
+                                title="Between 2 & 50 characters, only letters and numbers accepted"
                                 required>
                         <span></span>
                     </div>
-                    <div>
-                        <!-- <label class="book_info" for="book_author" data-help="Enter the book's author">Book Author</label> -->
+                    <div>                        
                         <label for="book_author" data-help="Enter the book's author">Book Author</label>
                         <input type="text" class="book_info" 
                                 id="book_author" 
@@ -45,23 +43,23 @@
                                 required>
                         <span></span>
                     </div>
-                    <div>
-                        <!-- <label class="book_info" for="book_pages" data-help="Number of pages in book">Number of Pages</label>                                 -->
+                    <div>                        
                         <label for="book_pages" data-help="Number of pages in book">Number of Pages</label>                                
                         <input type="number" class="book_info" 
                                 id="book_pages" 
                                 name="book_pages"
+                                min="1"
+                                max="9999"
                                 placeholder="1 - 9999"
                                 pattern="^[0-9]{1,9999}$"
                                 title="Whole numbers between 1 and 9999 (ie. 400 or 527, etc.)"
                                 required>
                         <span></span>
                     </div>
-                    <div>
-                        <!-- <label class="book_info" for="book_read" data-help="Have you read the book?">Have you read the book?</label>  -->
+                    <div>                        
                         <label for="book_read" data-help="Have you read the book?">Have you read the book?</label> 
                         <select class="book_info" id="book_read" name="book_read" required>
-                            <option value="">--Choose--</option>
+                            <option value=""> --Choose-- </option>
                             <option value="yes">Yes</option>                          
                             <option value="no">No</option>
                         </select>
