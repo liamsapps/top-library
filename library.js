@@ -2,14 +2,55 @@ const myLibrary = [];
 const books = document.querySelector("#books");
 const btnAdd = document.querySelector("#add");
 const myForm = document.querySelector("#my_form");
+const formMsg = document.querySelector("#message");
 const bTitle = document.querySelector("#book_title");
 const bAuthor = document.querySelector("#book_author");
 const bPages = document.querySelector("#book_pages");
 const bRead = document.querySelector("#book_read");
 const btnSubmit = document.querySelector("#submit");
 const btnCancel = document.querySelector("#cancel");
-
 const bookInfo = document.querySelectorAll(".book_info");
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    myForm.style.cssText = "display: none; visibility: hidden";
+    loadBooks();
+});
+
+// from the left, form will slide into place
+btnAdd.addEventListener("click", formDisplay);
+
+// hide form and clear inputs
+btnCancel.addEventListener("click", () => {
+    formDisplay();
+    formReset();
+});
+
+myForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    
+    if (myForm.checkValidity()) {
+        // Form is valid
+        const bookCheck = addBookToLibrary(bTitle.value, bAuthor.value, bPages.value, bRead.value);
+
+        // books already exists
+        if (bookCheck) {
+            // enable use of margin in CSS to better separate message from label (book title)
+            formMsg.style.cssText = "display: inline-block; margin-bottom: 1rem;";
+            formMsg.textContent = `${bTitle.value} by ${bAuthor.value} already exists. Try again.`;
+        }
+        else {
+            // if new book added OR cancelled
+            formReset();
+
+            // hide form & enable button ("Add to Collection") 
+            formDisplay();
+        
+            loadBooks(); 
+
+            dialog.close();
+        }    
+    }       
+});
 
 function GenerateGuid() {
     if (self && self.crypto && typeof self.crypto.randomUUID === 'function') {
@@ -37,7 +78,14 @@ Book.prototype.toggleRead = function() {
 }
 
 function addBookToLibrary(title, author, pages, read) {
-    myLibrary.unshift(new Book(title, author, pages, read));        
+    const bookFound = myLibrary.findIndex(book => book.title === title && book.author === author);
+    if (bookFound !== -1) {
+        return true;
+    }
+    else {
+        myLibrary.unshift(new Book(title, author, pages, read));  
+        return false;      
+    }
 }
 
 function removeBookFromLibrary(event, bookID) {    
@@ -61,6 +109,9 @@ function formDisplay() {
 }
 
 function formReset() {
+    // reset span to prevent added space between empty message and label (book title)    
+    formMsg.style.cssText = "display: inline;";
+    formMsg.textContent = "";
     bTitle.value = "";
     bAuthor.value = "";
     bPages.value = "";
@@ -80,9 +131,6 @@ function loadBooks() {
         listHolder.className = "book_list";
         const list = document.createElement("ul");
 
-        // const bookID = document.createElement("li");
-        // bookID.textContent = item.id;
-        
         const bookTitle = document.createElement("li");
         bookTitle.textContent = item.title;
 
@@ -93,8 +141,7 @@ function loadBooks() {
         bookPages.textContent = item.pages;
 
         const bookRead = document.createElement("li");        
-        bookRead.textContent = (item.read === "yes") ? "read" : "not read"; 
-        // bookRead.className = (item.read === "yes") ? "book_read" : "";      
+        bookRead.textContent = (item.read === "yes") ? "read" : "not read";         
         bookRead.className = (item.read === "yes") ? "book_read" : "book_not_read";      
         
         const items = [bookTitle, bookAuthor, bookPages, bookRead];        
@@ -150,42 +197,6 @@ addBookToLibrary("Moby Dick", "Herman Melville", 635, "no");
 // addBookToLibrary("Lord of the Flies", "William Golding", 224, "no");
 
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    myForm.style.cssText = "display: none; visibility: hidden";
-    // bookInfo.forEach(item => item.disabled = true);
-    loadBooks();
-});
-
-myForm.addEventListener("submit", (event) => {
-    // If the form is invalid, do not proceed        
-    if (!myForm.checkValidity()) {        
-        event.preventDefault(); // Prevent submission        
-    }
-    else {
-        // Form is valid
-        addBookToLibrary(bTitle.value, bAuthor.value, bPages.value, bRead.value);
-        
-        // Prevent submission
-        event.preventDefault();
-
-        // if new book added OR cancelled
-        formReset();
-        
-        // keep form hidden until button ("Add to Collection") clicked 
-        formDisplay();
-
-        loadBooks();
-    }        
-});
-
-// from the left, form will slide into place
-btnAdd.addEventListener("click", formDisplay);
-
-// hide form and clear inputs
-btnCancel.addEventListener("click", () => {
-    formDisplay();
-    formReset();
-});
 
 
 
